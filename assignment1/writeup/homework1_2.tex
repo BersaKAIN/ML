@@ -1,0 +1,129 @@
+\documentclass[11pt]{article}
+
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{url}
+\usepackage{wrapfig}
+\usepackage{color}
+\usepackage{marvosym}
+\usepackage{enumerate}
+\usepackage{subfigure}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref} 
+
+
+\oddsidemargin 0mm
+\evensidemargin 5mm
+\topmargin -20mm
+\textheight 240mm
+\textwidth 160mm
+
+
+
+
+\newcommand{\vw}{{\bf w}}
+\newcommand{\vx}{{\bf x}}
+\newcommand{\vy}{{\bf y}}
+\newcommand{\vxi}{{\bf x}_i}
+\newcommand{\yi}{y_i}
+\newcommand{\vxj}{{\bf x}_j}
+\newcommand{\vxn}{{\bf x}_n}
+\newcommand{\yj}{y_j}
+\newcommand{\ai}{\alpha_i}
+\newcommand{\aj}{\alpha_j}
+\newcommand{\X}{{\bf X}}
+\newcommand{\Y}{{\bf Y}}
+\newcommand{\vz}{{\bf z}}
+\newcommand{\msigma}{{\bf \Sigma}}
+\newcommand{\vmu}{{\bf \mu}}
+\newcommand{\vmuk}{{\bf \mu}_k}
+\newcommand{\msigmak}{{\bf \Sigma}_k}
+\newcommand{\vmuj}{{\bf \mu}_j}
+\newcommand{\msigmaj}{{\bf \Sigma}_j}
+\newcommand{\pij}{\pi_j}
+\newcommand{\pik}{\pi_k}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\el}{\mathcal{L}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\vxij}{{\bf x}_{ij}}
+\newcommand{\vt}{{\bf t}}
+\newcommand{\yh}{\hat{y}}
+\newcommand{\code}[1]{{\footnotesize \tt #1}}
+\newcommand{\alphai}{\alpha_i}
+
+\pagestyle{myheadings} 
+\markboth{Homework 1}{Spring 2014 CS 475 Machine Learning: Homework 1} 
+
+
+\title{CS 475 Machine Learning: Homework 1\\Learning Foundations\\
+\Large{Due: Wednesday February 12, 2014, 12:00pm}\\
+50 Points Total \hspace{1cm} Version 1.2}
+\author{Yiran Zhang}
+\date{}
+
+\begin{document}
+\large
+\maketitle
+\thispagestyle{headings}
+
+\vspace{-.5in}
+\section{Analytical (15 Points)}
+In addition to completing the analytical questions, your assignment for this homework is to learn Latex. All homework writeups must be PDFs compiled from Latex. Why learn latex?
+\begin{enumerate}
+\item It is incredibly useful for writing mathematical expressions.
+\item It makes references simple.
+\item Many academic papers are written in latex.
+\end{enumerate}
+The list goes on. Additionally, it makes your assignments much easier to read than if you try to scan them in or complete them in Word.
+
+We realize learning latex can be daunting. Fear not. There are many tutorials on the Web to help you learn. We recommend using pdflatex. It's available for nearly every operating system. Additionally, we have provided you with the tex source for this PDF, which means you can start your writeup by erasing much of the content of this writeup and filling in your answers. You can even copy and paste the few mathematical expressions in this assignment for your convenience. As the semester progresses, you'll no doubt become more familiar with latex, and even begin to appreciate using it.
+
+Be sure to check out this cool latex tool for finding symbols. It uses machine learning! \url{http://detexify.kirelabs.org/classify.html}
+
+\paragraph{1 (3 points)} A basket contains black and green grapes, 30\% of the grapes are sweet, the rest are sour. 40\% of the grapes that are sweet are black, 20\% of the sour grapes are black. What is the probability that a black grape is sweet?
+
+So from the question we know that:
+\begin{enumerate}
+\item $p(sweet) = 0.3 = 1 - p(sour)$
+\item $p(black|sweet) = 0.4$
+\item $p(black|sour) = 0.2$
+\end{enumerate}
+
+And we are looking for $p(sweet|black)$
+
+\begin{eqnarray*}
+  p(sweet|black) &=&  \frac{p(sweet, black)}{p(black)}  \\
+  &=& \frac{p(black|sweet)p(sweet)}{p(black,sweet)+p(black,sour)}  \\
+  &=&\frac{0.4\dot0.3}{0.4\cdot0.3 + (1-0.3)\cdot0.2 }    \\
+  &=&\frac{6}{13}=0.46
+\end{eqnarray*}
+
+
+
+
+\paragraph{2 (3 points)} You are provided a computer program that produces random integers between 1 and 6, i.e. a die. The programmer advises you that the die results are not chosen IID. You are told that the die is biased. In order to determine its bias, you run the program for many trials, recording the number of times each number is returned. Suppose that out of $n$ trials, there were $m$ 1s. You are then asked to compute the probability that the next roll of the die will produce a 1. In terms of $m$ and $n$, can you estimate the probability of a $1$? If yes, what is it? If not, why not?
+
+NO, this is because we cannot assume iid of the sampled data. Think about we have a dice that will give 6 with probability 1 in the following rolls if the first roll is not 1 and will give 1 if the first roll is 1. Then the sequence of observed data is very depend on the first data point. If it is not, then $p(6) =1$ for all the following, then we will have the estimation that $p(1) = 0$ or $p(1) = 1$. But neither of these are nice estimation of the probability that are desired. To conclude, the iid assumption is essential if we want to do statistical estimation.
+
+\paragraph{3 (4 points)} For each of the following, state if the function is a valid loss function. If it is not, why not? Note that $\hat{y}$ is the predicted label and $y$ is the correct label. 
+
+\begin{enumerate}
+\item $\ell (y, \hat{y}) = y-\hat{y}$ NO, because the loss function can be both positive and negative. Consider that sequence $0,1,1,1,1,1,0,0,0,0$, if we use this loss function, then 0.5 will be a perfect hypothesis. But actually, there is quite a lot distance.
+\item $\ell (y, \hat{y}) = (y-\hat{y})^2$ YES, this is a good and common loss function. It is even better than the loss function $y-\hat{y}$ since it is differentiable.
+\item $\ell (y, \hat{y}) = |(y-\hat{y})|/\hat{y}$ NO, loss function may be both positive and negative, so the argument in (a) can also be used here. What is making things worse is that if the predicted label is 0, the loss function would blow up to infinity.
+\end{enumerate}
+
+\paragraph{4 (5 points)} 
+Give an example of an optimal hypothesis, a finite hypothesis class that contains the optimal hypothesis, and an infinite class that does not contain the optimal hypothesis.
+
+We are considering the problem that data are sampled from $y=x$ and we are trying to predict the mean. So the data should be like $(1,1), (2,2), (3.54,3.54) \dots$
+
+Optimal hypothesis: $y = x$.
+
+A finite hypothesis class: $y = kx, k$ is integer, $|k| <= 5$.
+
+Infinite hypothesis class: $y = z\log x, z$is real. 
+
+\end{document}
