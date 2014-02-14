@@ -144,6 +144,9 @@ public class Classify {
 		registerOption("predictions_file", "String", true, "The predictions file to create.");
 		registerOption("algorithm", "String", true, "The name of the algorithm for training.");
 		registerOption("model_file", "String", true, "The name of the model file to create/load.");
+		registerOption("gd_eta", "int", true, "The step size parameter for GD.");
+		registerOption("gd_iterations", "int", true, "The number of GD iterations.");
+		registerOption("num_features_to_select", "int", true, "The number of features to select.");
 		
 		// Other options will be added here.
 	}
