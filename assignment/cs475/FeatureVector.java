@@ -27,6 +27,13 @@ public class FeatureVector implements Serializable {
 		}
 	}
 	
+	public boolean containIndex(int index) {
+		if (data.containsKey(index)) {
+			return true;
+		}
+		return false;
+	}
+	
 	public HashMap<Integer, Double> getVector() {
 		return data;
 	}

@@ -29,6 +29,18 @@ public class Classify {
 		String algorithm = CommandLineUtilities.getOptionValue("algorithm");
 		String model_file = CommandLineUtilities.getOptionValue("model_file");
 		
+		// option value for gradient descent
+		int gd_iterations = 20;
+		if (CommandLineUtilities.hasArg("gd_iterations"))
+		    gd_iterations = CommandLineUtilities.getOptionValueAsInt("gd_iterations");
+		double gd_eta = .01;
+		if (CommandLineUtilities.hasArg("gd_eta"))
+		    gd_eta = CommandLineUtilities.getOptionValueAsFloat("gd_eta");
+		int num_features;
+		if (CommandLineUtilities.hasArg("num_features_to_select"))
+		    num_features = CommandLineUtilities.getOptionValueAsInt("num_features_to_select");
+
+		
 		if (mode.equalsIgnoreCase("train")) {
 			if (data == null || algorithm == null || model_file == null) {
 				System.out.println("Train requires the following arguments: data, algorithm, model_file");
