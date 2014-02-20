@@ -2,13 +2,14 @@ package cs475;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 public class FeatureVector implements Serializable {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 3817908880311125195L;
-	private HashMap<Integer, Double> data;
+	private Map<Integer, Double> data;
 	
 	public FeatureVector() {
 		this.data = new HashMap<Integer, Double>();
@@ -34,7 +35,7 @@ public class FeatureVector implements Serializable {
 		return false;
 	}
 	
-	public HashMap<Integer, Double> getVector() {
+	public Map<Integer, Double> getVector() {
 		return data;
 	}
 

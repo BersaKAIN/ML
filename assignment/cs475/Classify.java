@@ -28,19 +28,7 @@ public class Classify {
 		String predictions_file = CommandLineUtilities.getOptionValue("predictions_file");
 		String algorithm = CommandLineUtilities.getOptionValue("algorithm");
 		String model_file = CommandLineUtilities.getOptionValue("model_file");
-		
-		// option value for gradient descent
-		int gd_iterations = 20;
-		if (CommandLineUtilities.hasArg("gd_iterations"))
-		    gd_iterations = CommandLineUtilities.getOptionValueAsInt("gd_iterations");
-		double gd_eta = .01;
-		if (CommandLineUtilities.hasArg("gd_eta"))
-		    gd_eta = CommandLineUtilities.getOptionValueAsFloat("gd_eta");
-		int num_features;
-		if (CommandLineUtilities.hasArg("num_features_to_select"))
-		    num_features = CommandLineUtilities.getOptionValueAsInt("num_features_to_select");
-
-		
+				
 		if (mode.equalsIgnoreCase("train")) {
 			if (data == null || algorithm == null || model_file == null) {
 				System.out.println("Train requires the following arguments: data, algorithm, model_file");
@@ -79,10 +67,12 @@ public class Classify {
 		Predictor p;
 		if (algorithm.equals("even_odd")) {
 			p = new EvenOddClassifier();
-			p.train(instances);
 		}
 		else if (algorithm.equals("majority")) {
 			p = new MajorityClassifier();
+		}
+		else if (algorithm.equals("logistic_regression")) {
+			p = new LogisticClassifier();
 		}
 		else {
 			throw new Exception("The algorithm is not supported");
@@ -103,9 +93,7 @@ public class Classify {
 			Label label = predictor.predict(instance);
 			writer.writePrediction(label);
 		}
-		
-		writer.close();
-		
+		writer.close();		
 	}
 
 	public static void saveObject(Object object, String file_name) {
