@@ -1,0 +1,319 @@
+\documentclass[11pt]{article}
+
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{url}
+\usepackage{wrapfig}
+\usepackage{color}
+\usepackage{marvosym}
+\usepackage{enumerate}
+\usepackage{subfigure}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref} 
+
+
+\oddsidemargin 0mm
+\evensidemargin 5mm
+\topmargin -20mm
+\textheight 240mm
+\textwidth 160mm
+
+
+
+\newcommand{\vwi}{{\bf w}_i}
+\newcommand{\vw}{{\bf w}}
+\newcommand{\vx}{{\bf x}}
+\newcommand{\vy}{{\bf y}}
+\newcommand{\vxi}{{\bf x}_i}
+\newcommand{\yi}{y_i}
+\newcommand{\vxj}{{\bf x}_j}
+\newcommand{\vxn}{{\bf x}_n}
+\newcommand{\yj}{y_j}
+\newcommand{\ai}{\alpha_i}
+\newcommand{\aj}{\alpha_j}
+\newcommand{\X}{{\bf X}}
+\newcommand{\Y}{{\bf Y}}
+\newcommand{\vz}{{\bf z}}
+\newcommand{\msigma}{{\bf \Sigma}}
+\newcommand{\vmu}{{\bf \mu}}
+\newcommand{\vmuk}{{\bf \mu}_k}
+\newcommand{\msigmak}{{\bf \Sigma}_k}
+\newcommand{\vmuj}{{\bf \mu}_j}
+\newcommand{\msigmaj}{{\bf \Sigma}_j}
+\newcommand{\pij}{\pi_j}
+\newcommand{\pik}{\pi_k}
+\newcommand{\D}{\mathcal{D}}
+\newcommand{\el}{\mathcal{L}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\vxij}{{\bf x}_{ij}}
+\newcommand{\vt}{{\bf t}}
+\newcommand{\yh}{\hat{y}}
+\newcommand{\code}[1]{{\footnotesize \tt #1}}
+\newcommand{\alphai}{\alpha_i}
+
+\pagestyle{myheadings} 
+\markboth{Homework 3}{Spring 2014 CS 475 Machine Learning: Homework 3}
+
+
+\title{CS 475 Machine Learning: Homework 3\\Supervised Classifiers 2\\
+\Large{Due: Wednesday March 5, 2014, 12:00pm}\\
+100 Points Total \hspace{1cm} Version 1.0}
+\author{}
+\date{}
+
+\begin{document}
+\large
+\maketitle
+\thispagestyle{headings}
+
+\vspace{-.5in}
+
+{\bf Make sure to read from start to finish before beginning the assignment.}
+\section{Programming (75 points)}
+In this assignment you will write three learning algorithms: a Perceptron classifier with Margin, a Dual Perceptron classifier with Margin, and Margin Infused Relaxation Algorithm. All the classifiers need only support binary prediction: the first two enforce large margins for linear and non-linear classification respectively, and the last one computes a different learning rate for each update ensuring that the example is correct after an update.
+
+\subsection{Perceptron with Margin}
+Perceptron is a mistake-driven online learning algorithm. It takes as input a vector of real-valued inputs $\vx$ and makes a prediction $\yh \in \{-1,+1\}$ (for this assignment we consider only binary labels). Predictions are made using a linear classifier: $\yh = \textrm{sign}(\vw \cdot \vx)$. The term $\vw \cdot \vx$ is the dot product of $\vw$ and $\vx$ computed as $\sum_i x_i  w_i$. Updates to $\vw$ are made only when a prediction is incorrect: $\yh \ne y$. The new weight vector $\vw'$ is a function of the current weight vector $\vw$ and example $\vx$, $y$. The weight vector is updated so as to improve the prediction on the current example. Note that Perceptron naturally handles continuous and binary features, so no special processing is needed.
+
+The basic structure of the algorithm is:
+\begin{enumerate}
+\item Initialize $\vw$ to {\bf 0}, set learning rate $\eta$ and number of iterations $I$
+\item For each training iteration $k = 1 \ldots I$:
+\begin{enumerate}
+\item For each example $i=1\ldots N$:
+\begin{enumerate}
+\item Receive an example $\vxi$
+\item Predict the label $\hat{\yi} =  \textrm{sign}(\vw \cdot \vxi)$, where
+$\textrm{sign}(\sum_i x_i \cdot w_i) =\left\{
+     \begin{array}{lr}
+       1 ~~  \textrm{if} ~~ \vw \cdot \vxi \ge 0  \\
+       -1 ~~ \textrm{otherwise}
+     \end{array}
+   \right.$
+\item If  $\hat{\yi} \ne \yi$, make an update to $\vw$: $\vw' = \vw + \eta \yi \vxi$
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+Note that there is no bias term in this version and you should \emph{not} include one in your solution. Also observe the definition of ``sign'' to account for 0 values. While sign returns $-1$ and $1$, you must output as predictions the actual label values, which are $0$ and $1$.
+
+This is the general form of the Perceptron, but in this assignment we will consider two changes: adding a margin and using the dual
+formulation.
+
+\subsubsection{Margin}
+By enforcing a margin during learning, we ensure that a training example is not only labeled correctly but it is labeled correctly with a margin.
+While the standard Perceptron updates on mistakes only (i.e. $\hat{\yi} \ne \yi$), the Perceptron with margin will update whenever
+the example is not classified correctly with at least a margin (i.e. $\yi (\vw \cdot \vxi) < 1$). The actual update remains identical.
+This small change ensures that the algorithm keeps learning even when all examples are labeled correctly.
+
+The algorithm for Perceptron with Margin is:
+\begin{enumerate}
+\item Initialize $\vw$ to {\bf 0}, set learning rate $\eta$ and number of iterations $I$
+\item For each training iteration $k = 1 \ldots I$:
+\begin{enumerate}
+\item For each example $i=1\ldots N$:
+\begin{enumerate}
+\item Receive an example $\vxi$
+\item If  $\yi (\vw \cdot \vxi) < 1$, make an update to $\vw$: $\vw' = \vw + \eta \yi \vxi$
+\end{enumerate}
+\end{enumerate}
+\end{enumerate}
+
+\subsubsection{Deliverables}
+You need to implement a single Perceptron algorithm with Margin. Your Perceptron predictor will be selected by passing the string \code{margin\_perceptron} as the argument for the algorithm parameter.
+
+\subsubsection{Learning Rate}
+Perceptron uses a learning rate $\eta$, where  $0 < \eta \leq 1$.  Your default value for $\eta$ should be $1$. You \emph{must} add a command line argument to allow this value to be adjusted via the command line.
+
+Add this command line option by adding the following code to the \code{createCommandLineOptions} method of \code{Classify}.
+\begin{footnotesize}
+\begin{verbatim}
+registerOption("online_learning_rate", "double", true, "The learning rate for perceptron.");
+\end{verbatim}
+\end{footnotesize}
+
+Be sure to add the option name exactly as it appears above. A common mistake is to change underscores to dashes.
+
+You can then read the value from the command line by adding the following to the main method of \code{Classify}:
+\begin{footnotesize}
+\begin{verbatim}
+double online_learning_rate = 1.0;
+if (CommandLineUtilities.hasArg("online_learning_rate"))
+    online_learning_rate = CommandLineUtilities.getOptionValueAsFloat("online_learning_rate");
+\end{verbatim}
+\end{footnotesize}
+
+\subsection{Dual Perceptron with Margin}
+The above algorithm only learns linear classifiers. However, some data can be highly non-linear, which is impossible to learn using a linear classifier. In class, we learned about the kernel trick, which uses the dual of a linear classifier for kernel learning. Kernels project data into high dimensional spaces in which a linear separator may exist. The decision boundary learned by the linear classifier is linear in the high dimensional space but non-linear in the original feature space.
+
+A kernel is a function which maps the input data into a new space using a basis function and computes the inner product between two basis functions. A kernel function is defined as:
+\[
+K(x, x') = (\phi(x) \cdot \phi(x')^T)
+\]
+
+In this assignment you will implement the Dual Perceptron so that you can learn with a kernel. We derived the updates for the dual perceptron in class. Specifically, we can rewrite the prediction rule for the Dual Perceptron as:
+\[
+\yh = \vw \cdot \vx = \sum_{i=1}^N \alphai \yi K(x_i, x)
+\]
+Instead of learning $\vw$, you will learn $\alphai$ for each example $\vxi$. The new update increments $\alphai$ for each time the prediction for $\vxi$ is incorrect (for many training iterations):
+\[
+\alphai += 1 ~~\textrm{iff}~~ \yh_i ~~\textrm{is incorrect} ~.
+\]
+
+In this case, since we are implementing Perceptron with a margin, updates will happen not only when the prediction is incorrect, but when it
+is correct without a margin.
+
+\subsubsection{Deliverables}
+You need to implement a Dual Perceptron algorithm with Margin. Your algorithm should both enforce a margin and support kernels.
+Your Dual Perceptron predictor will be selected by passing a different string for each kernel for the algorithm parameter as described below.
+
+\subsubsection{Kernel Functions}
+
+You will implement two kernel functions for use with the Dual Perceptron. We strongly suggest building a single class for the \code{DualPerceptron} that supports different \code{Kernel} objects, rather than duplicate code.
+In fact, you can write a single class that supports the perceptron with margin above and the dual perceptron.
+\begin{enumerate}
+\item Linear Kernel: $K(x, x') = (x \cdot x'^T)$
+
+The command line argument for the \code{algorithm} parameter should be \code{perceptron\_linear\_kernel}.
+
+\item Polynomial Kernel: $K(x, x') = (1 + (x x'^T))^d$
+
+The command line argument for the \code{algorithm} parameter should be \code{perceptron\_polynomial\_kernel}. The parameter $d$ is explained below.
+
+\end{enumerate}
+
+Note that the naive implementation may compute $K(x_i,x_j)$ many times during training. To improve training efficiency you should store (cache) computed values of $K(x_i,x_j)$ in a Matrix, $G_{ij}=K(x_i, x_j)$. $G$ is called a Gram Matrix.
+
+The parameters $d$ for the polynomial kernel is set using command line options. Add this command line option by adding the following code block to the \code{createCommandLineOptions} method of \code{Classify}.
+
+\begin{footnotesize}
+\begin{verbatim}
+registerOption("polynomial_kernel_exponent", "double", true, "The exponent of the polynomial kernel.");
+\end{verbatim}
+\end{footnotesize}
+
+You can then read the value from the command line by adding the following to the main method of \code{Classify}:
+\begin{footnotesize}
+\begin{verbatim}
+double polynomial_kernel_exponent = 2;
+if (CommandLineUtilities.hasArg("polynomial_kernel_exponent"))
+   polynomial_kernel_exponent = CommandLineUtilities.getOptionValueAsFloat("polynomial_kernel_exponent");
+\end{verbatim}
+\end{footnotesize}
+
+The default value for $d$ should be $2$.
+
+\subsection{Margin Infused Relaxation Algorithm}
+While the Perceptron described above benefits from a margin, it still makes no guarantees about the correctness of an example after
+an update.
+
+This idea is captured in a class of algorithms called Passive-Aggressive Learning. These algorithms are passive in that they ignore examples that are classified correctly (with a margin). However, when an example is classified without a margin, they become aggressive and update to ensure that the examples are now classified with at least a margin.
+
+One particular Passive-Aggressive algorithm is called the Margin Infused Relaxation Algorithm (MIRA). MIRA minimizes the hinge-loss
+by updating each example to enforce a margin. Specifically, MIRA solves the following optimization algorithm on every round:
+\begin{eqnarray}
+\vw' &=& \arg \min_{\vw'} \frac{1}{2}||\vw - \vw'||^2 \nonumber \\
+& \textrm{s.t.} &\yi (\vw' \vxi) \ge 1 \nonumber
+\end{eqnarray}
+
+Solving this optimization problem yields an additive update for $\vw$
+\[
+\vw' = \vwi + \tau \yi \vxi ~,
+\]
+where $\vw'$ is the new weight vector, $\vw$ is the current weight vector, and $\tau$ is defined as:
+\[
+\tau = \frac{1-\yi (\vw \vxi)}{||\vxi||^2}
+\]
+
+The end result is an algorithm that is very similar to the Perceptron. Binary predictions are made using the standard prediction rule: sign($\vw \vx$). The updates are both additive and modify $\vw$ by adding $y \vx$ times some learning rate. In the case of Perceptron, the learning rate was given as $\eta$. In this case, $\tau$ can be thought of as a dynamic learning rate, in which the scale of the update depends on how incorrect the prediction was. Finally, updates are made when the current example has non-zero loss. For (regular) Perceptron, this is based on the 0/1 loss. For MIRA, it is based on the hinge-loss, i.e. update when $\yi (\vw \vxi) < 1$.
+
+\subsubsection{Deliverables}
+In this assignment, you will implement MIRA for binary linear classification. Your MIRA predictor will be selected by passing the string $\code{mira}$ as the argument for the algorithm parameter.
+
+
+\subsection{Number of training iterations}
+For all the three algorithms above, since we will be running these online methods in batch mode, you can iterate multiple times over the data. This can improve performance by increasing the number of updates each algorithm makes. We will define the number of times each algorithm iterates over all of the data by the parameter \code{online\_training\_iterations}. You \emph{must} define a new command line option for this parameter. Use a default value of $5$ for this parameter.
+
+You can add this option by adding the following code to the \code{createCommandLineOptions} method of \code{Classify}.
+\begin{footnotesize}
+\begin{verbatim}
+registerOption("online_training_iterations", "int", true, "The number of training iterations for online methods.");
+\end{verbatim}
+\end{footnotesize}
+
+
+You can then read the value from the command line by adding the following to the main method of \code{Classify}:
+\begin{footnotesize}
+\begin{verbatim}
+int online_training_iterations = 5;
+if (CommandLineUtilities.hasArg("online_training_iterations"))
+    online_training_iterations = CommandLineUtilities.getOptionValueAsInt("online_training_iterations");
+\end{verbatim}
+\end{footnotesize}
+
+Both MIRA and Perceptron with Margin must support this command line option. As in previous assignments, you should not change the order of examples. You must iterate over examples exactly as they appear in the data file, i.e. as provided by the data loader.
+
+
+\subsection{Numerical Precision}
+For all numerical calculations involving floating point numbers, use the {\tt double} type and NOT the {\tt float} type to store values.
+This will help in achieving numerical precision.
+
+\subsection{Data Sets}
+We are providing a new synthetic data set for this assignment called \code{Circle}. It may be helpful for testing your non-linear methods.
+
+
+\section{Analytical (25 points)}
+
+\paragraph{1) Kernels (10 points)}
+
+We say $K$ is a kernel function if there exists some transformation $\phi:\mathbb{R}^m\rightarrow \mathbb{R}^{m'}$ such that $K(x,x') = \left<\phi(x),\phi(x')\right>$.
+Let $K_1$ and $K_2$ be two kernel functions.
+\begin{enumerate}[(a)]
+
+\item Prove that $K(x,x') = K_1(x,x') K_2(x,x')$ is a kernel function.
+
+\item Prove that $K(x,x') = K_1(x,x') + K_2(x,x')$ is a kernel function.
+
+\end{enumerate}
+
+
+\paragraph{2) Logistic Loss (10 points)} 
+
+
+Linear SVMs can be formulated in an unconstrained optimization problem
+\begin{align}\label{SVM}
+\min_{w,b}\sum_{i=1}^n H(y_i(w^Tx_i)) + \lambda\|w\|_2^2,
+\end{align}
+where $\lambda$ is the regularization parameter and $H$ is the well known logistic loss function:
+\[
+H(a) = \log(1+ exp(-a))
+\]
+The logistic loss function can be viewed as a convex surrogate of the 0/1 loss function, which can be written using the identity function as $I(a \leq 0)$.
+\begin{enumerate}[(a)]
+\item Prove that $H(a)$ is a convex function of $a$.
+
+\item The function $H(a) = \exp(-a)$ can also approximate the 0/1 loss function. How does this compare with the logistic loss function?
+
+\end{enumerate}
+
+\paragraph{3) Margin (5 points) }
+The SVM objective uses a margin value of $1$ in the constraints ($\gamma=1$.) Show that we can replace $1$ with any arbitrary constant $\gamma > 0$ and that the solution for the maximum margin hyperplane is unchanged.
+
+
+
+\section{What to Submit}
+In each assignment you will submit two things.
+\begin{enumerate}
+\item {\bf Code:} Your code as a zip file named {\tt library.zip}. {\bf You must submit source code (.java files)}. We will run your code using the exact command lines described above, so make sure it works ahead of time. Remember to submit all of the source code, including what we have provided to you.
+\item {\bf Writeup:} Your writeup as a {\bf PDF file} (compiled from latex) containing answers to the analytical questions asked in the assignment. Make sure to include your name in the writeup PDF and use the provided latex template for your answers.
+\end{enumerate}
+Make sure you name each of the files exactly as specified (library.zip and writeup.pdf).
+
+To submit your assignment, visit the ``Homework'' section of the website (\href{http://www.cs475.org/}{http://www.cs475.org/}.)
+
+\section{Questions?}
+Remember to submit questions about the assignment to the appropriate group on the class discussion board: \href{http://bb.cs475.org/}{http://bb.cs475.org}.
+
+\end{document}
