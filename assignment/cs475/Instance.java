@@ -32,5 +32,9 @@ public class Instance implements Serializable {
 		this._feature_vector = feature_vector;
 	}
 	
+	public double get(Integer index) {
+		return this.getFeatureVector().get(index);
+	}
+	
 	
 }

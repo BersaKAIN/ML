@@ -27,7 +27,9 @@ public class RunAndTest {
 
 
    public static void main(String[] args) throws Exception {
-      RunAndTest myRun = new RunAndTest(Algorithm.LOGISTICAL_REGRESSION);
+//      RunAndTest myRun = new RunAndTest(Algorithm.LOGISTICAL_REGRESSION);
+      RunAndTest myRun = new RunAndTest(Algorithm.MIRA);
+
       //myRun.train_arguments.add("-num_features_to_select"); myRun.train_arguments.add("20");
       myRun.run();
    }
@@ -168,7 +170,8 @@ public class RunAndTest {
       FINANCE("finance", Filetype.ALL),
       NLP("nlp", Filetype.ALL),
       SPEECH("speech", Filetype.ALL),
-      VISION("vision", Filetype.ALL);
+      VISION("vision", Filetype.ALL),
+      CIRCLE("circle", Filetype.ALL);
 
       public final String NAME;
       public final Filetype[] FILETYPES;
@@ -178,11 +181,12 @@ public class RunAndTest {
          FILETYPES = filetypes;
       }
 
-      private static final Dataset[] ALL = { SYNTHETIC_EASY, SYNTHETIC_HARD, BIO, FINANCE, NLP, SPEECH, VISION };
+      private static final Dataset[] ALL = { SYNTHETIC_EASY, SYNTHETIC_HARD, BIO, FINANCE, NLP, SPEECH, VISION, CIRCLE };
    }
 
    private enum Algorithm {
-      MAJORITY("majority"), EVEN_ODD("even_odd"), LOGISTICAL_REGRESSION("logistic_regression");
+      MAJORITY("majority"), EVEN_ODD("even_odd"), LOGISTICAL_REGRESSION("logistic_regression"), MARGIN_PERCEPTRON("margin_perceptron"), 
+      PERCEPTRON_LINEAR_KERNEL("perceptron_linear_kernel"), PERCEPTRON_POLYNOMIAL_KERNEL("perceptron_polynomial_kernel"), MIRA("mira");
 
       public final String FLAG;
 

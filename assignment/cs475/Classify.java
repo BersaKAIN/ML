@@ -74,6 +74,18 @@ public class Classify {
 		else if (algorithm.equals("logistic_regression")) {
 			p = new LogisticClassifier();
 		}
+		else if (algorithm.equals("margin_perceptron")) {
+			p = new MarginPerceptron();
+		}
+		else if (algorithm.equals("perceptron_linear_kernel")) {
+			p = new MarginKernelPerceptron(algorithm);
+		}
+		else if (algorithm.equals("perceptron_polynomial_kernel")) {
+			p = new MarginKernelPerceptron(algorithm);
+		}
+		else if (algorithm.equals("mira")) {
+			p = new MIRA();
+		}
 		else {
 			throw new Exception("The algorithm is not supported");
 		}
@@ -147,6 +159,10 @@ public class Classify {
 		registerOption("gd_eta", "int", true, "The step size parameter for GD.");
 		registerOption("gd_iterations", "int", true, "The number of GD iterations.");
 		registerOption("num_features_to_select", "int", true, "The number of features to select.");
+		registerOption("online_learning_rate", "double", true, "The learning rate for perceptron.");
+		registerOption("polynomial_kernel_exponent", "int", true, "The exponent of the polynomial kernel.");
+		registerOption("online_training_iterations", "int", true, "The number of training iterations for online methods.");
+
 		
 		// Other options will be added here.
 	}
