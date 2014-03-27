@@ -3,7 +3,6 @@ package cs475;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -16,10 +15,9 @@ public class BernoulliLikelihood {
 	
 	public static void main(String[] args) throws Exception {
 		// Parse the command line.
-		String[] manditory_args = { "data"};
+		String[] manditory_args = {"data"};
 		createCommandLineOptions();
 		CommandLineUtilities.initCommandLineParameters(args, BernoulliLikelihood.options, manditory_args);
-		
 		String dataFile = CommandLineUtilities.getOptionValue("data");
 		BernoulliLikelihood bl = new BernoulliLikelihood();
 		ArrayList<Integer> data = bl.readData(dataFile);

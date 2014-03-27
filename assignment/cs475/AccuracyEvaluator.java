@@ -15,13 +15,16 @@ public class AccuracyEvaluator extends Evaluator{
 				correct += 1.0;
 			}
 		}
-		try {
-			return correct/total;
-		}
-		catch(Exception e) {
-			System.out.println("there is no instance in the list.");
-			throw e;
-		}
+		if (total == 0.0) {return 0;}
+		return correct/total;
+		
+//		try {
+//			return correct/total;
+//		}
+//		catch(Exception e) {
+//			System.out.println("there is no instance in the list.");
+//			throw e;
+//		}
 	}
 
 }

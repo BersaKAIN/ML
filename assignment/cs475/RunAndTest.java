@@ -28,9 +28,9 @@ public class RunAndTest {
 
    public static void main(String[] args) throws Exception {
 //      RunAndTest myRun = new RunAndTest(Algorithm.LOGISTICAL_REGRESSION);
-      RunAndTest myRun = new RunAndTest(Algorithm.MIRA);
+      RunAndTest myRun = new RunAndTest(Algorithm.LOGISTICAL_REGRESSION);
 
-      //myRun.train_arguments.add("-num_features_to_select"); myRun.train_arguments.add("20");
+      myRun.train_arguments.add("-num_features_to_select"); myRun.train_arguments.add("20");
       myRun.run();
    }
 
