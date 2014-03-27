@@ -3,3 +3,6 @@
 *.model
 *.prediction
 assignment/Data/*
+*.aux
+*.dvi
+*.out
