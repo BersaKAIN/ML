@@ -28,9 +28,9 @@ public class RunAndTest {
 
    public static void main(String[] args) throws Exception {
 //      RunAndTest myRun = new RunAndTest(Algorithm.LOGISTICAL_REGRESSION);
-      RunAndTest myRun = new RunAndTest(Algorithm.LOGISTICAL_REGRESSION);
+      RunAndTest myRun = new RunAndTest(Algorithm.LAMBDA_MEANS);
 
-      myRun.train_arguments.add("-num_features_to_select"); myRun.train_arguments.add("20");
+//      myRun.train_arguments.add("-num_features_to_select"); myRun.train_arguments.add("20");
       myRun.run();
    }
 
@@ -172,6 +172,7 @@ public class RunAndTest {
       SPEECH("speech", Filetype.ALL),
       VISION("vision", Filetype.ALL),
       CIRCLE("circle", Filetype.ALL);
+      
 
       public final String NAME;
       public final Filetype[] FILETYPES;
@@ -186,7 +187,7 @@ public class RunAndTest {
 
    private enum Algorithm {
       MAJORITY("majority"), EVEN_ODD("even_odd"), LOGISTICAL_REGRESSION("logistic_regression"), MARGIN_PERCEPTRON("margin_perceptron"), 
-      PERCEPTRON_LINEAR_KERNEL("perceptron_linear_kernel"), PERCEPTRON_POLYNOMIAL_KERNEL("perceptron_polynomial_kernel"), MIRA("mira");
+      PERCEPTRON_LINEAR_KERNEL("perceptron_linear_kernel"), PERCEPTRON_POLYNOMIAL_KERNEL("perceptron_polynomial_kernel"), MIRA("mira"), LAMBDA_MEANS("labmda_means");
 
       public final String FLAG;
 

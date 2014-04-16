@@ -86,6 +86,12 @@ public class Classify {
 		else if (algorithm.equals("mira")) {
 			p = new MIRA();
 		}
+		else if (algorithm.equals("lambda_means")) {
+			p = new LambdaMeansPredictor(instances);
+		}
+		else if (algorithm.equals("ska")) {
+			p = new StochasticKMeansPredictor(instances);
+		}
 		else {
 			throw new Exception("The algorithm is not supported");
 		}
@@ -162,6 +168,10 @@ public class Classify {
 		registerOption("online_learning_rate", "double", true, "The learning rate for perceptron.");
 		registerOption("polynomial_kernel_exponent", "int", true, "The exponent of the polynomial kernel.");
 		registerOption("online_training_iterations", "int", true, "The number of training iterations for online methods.");
+		registerOption("cluster_lambda", "double", true, "The value of lambda in lambda-means.");
+		registerOption("clustering_training_iterations", "int", true, "The number of clustering iterations.");
+		registerOption("num_clusters", "int", true, "The number of clusters");
+
 
 		
 		// Other options will be added here.
