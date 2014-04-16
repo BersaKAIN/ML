@@ -6,3 +6,5 @@ assignment/Data/*
 *.aux
 *.dvi
 *.out
+assignment/Preds
+*.py
