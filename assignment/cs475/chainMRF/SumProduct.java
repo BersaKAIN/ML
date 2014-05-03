@@ -1,26 +1,25 @@
 
 package cs475.chainMRF;
-import cs475.chainMRF.*;
 
 public class SumProduct {
 
 	private ChainMRFPotentials potentials;
 	// add whatever data structures needed
+	// may need variables to store for DP
+	double sum = 0;
 
 	public SumProduct(ChainMRFPotentials p) {
 		this.potentials = p;
 	}
 
 	public double[] marginalProbability(int x_i) {
-		// TODO
 		int n = potentials.chainLength();
 		int k = potentials.numXValues();
 		
 		double[] result = new double[k+1];
-		double sum = 0;
+		sum = 0;
 		result[0] = 0;
-		
-		
+				
 		for (int v =1 ; v <= k ; v++) {
 			result[v] = messageFactor2Node(x_i, x_i, v);
 			if (x_i != 1) {
@@ -32,14 +31,11 @@ public class SumProduct {
 				// not the last one
 			}
 			sum += result[v];
-		}
-		
-		
+		}	
 		// normalization
 		for (int v =1 ; v <= k ; v++) {
 			result[v] /= sum;
 		}
-		
 		return result;
 	}
 	
@@ -57,7 +53,7 @@ public class SumProduct {
 		}
 		else {
 			// they are not connected
-			return 1;
+			return result;
 		}
 		return result;
 	}
